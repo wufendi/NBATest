@@ -1,0 +1,4 @@
+react-native init MyApp --version 0.55.4
+1.问题 image 不能使用 svg / 使用框架 react-native-svg-image 大小不能控制
+2.导航
+https://www.jianshu.com/p/f39f020197ef
