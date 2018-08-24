@@ -122,17 +122,6 @@ export default class TeamDetail extends Component {
             this.setState({currentTab: key});
         }
     }
-    teamDetail(data) {
-        debugger
-        if (data.code !== this.state.name) {
-            this.setState({
-                name: data.code,
-                themeColor: Util.getTeamRelate(data.code).color,
-                stadium: Util.getTeamRelate(data.code).stadium,
-            });
-            this.getData()
-        }
-    }
     getData() {
         this.setState({
             loadingShow: true
@@ -192,7 +181,7 @@ export default class TeamDetail extends Component {
                                 {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? style.tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
                             </View>
                             <View style={{flex: 1}}>
-                                <CurrentTabContent navigation={this.props.navigation} data={currentData} teamDetail={this.teamDetail}/>
+                                <CurrentTabContent navigation={this.props.navigation} data={currentData} />
                             </View>
                         </View>
                     )

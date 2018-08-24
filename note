@@ -2,3 +2,9 @@ react-native init MyApp --version 0.55.4
 1.问题 image 不能使用 svg / 使用框架 react-native-svg-image 大小不能控制
 2.导航
 https://www.jianshu.com/p/f39f020197ef
+
+安卓模拟器运行步骤：
+0.打开本地模拟器
+1.adb connect 127.0.0.1:62001
+2.MyAppBack 下 node http.js
+3.MyApp 下 react-native run-android
