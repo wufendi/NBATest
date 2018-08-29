@@ -113,7 +113,7 @@ export default class Home extends Component {
         this.setState({
             loadingShow: true
         });
-        Util.getRequest(api.getTeamRankData,(data)=>{
+        Util.getRequest(api.getTeamRankData,{},(data)=>{
             const eastSource = this.state.eastSource;
             const westSource = this.state.westSource;
             let eastData = [];

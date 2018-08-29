@@ -19,7 +19,7 @@ let groupSchema = new Schema({
     nameEn: String,
 });
 let groupsModel = mongoose.model('groups', groupSchema);
-function getNbaTeamData(fn) {
+function getNbaTeamData(queryObject, fn) {
     mongoose.connect('mongodb://localhost/nba');
     db.on('error',() => {
         console.log('连接失败')
@@ -30,7 +30,8 @@ function getNbaTeamData(fn) {
     db.once('close', function() {
         console.log('断开成功')
     });
-    groupsModel.find({}, (err, data) => {
+    const query = Object.assign({},{_id:0}, queryObject);
+    groupsModel.find({}, query, (err, data) => {
         if (!err) {
             fn(data);
             console.log('查询数成功');

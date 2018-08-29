@@ -126,7 +126,7 @@ export default class TeamDetail extends Component {
         this.setState({
             loadingShow: true
         });
-        Util.getRequest(api.getTeamDetailData+`?team=${this.state.name}`,(data)=>{
+        Util.getRequest(api.getTeamDetailData+`?team=${this.state.name}`,{},(data)=>{
             if (data) {
                 this.setState({
                     loadingShow: false,

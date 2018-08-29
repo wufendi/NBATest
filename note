@@ -8,3 +8,26 @@ https://www.jianshu.com/p/f39f020197ef
 1.adb connect 127.0.0.1:62001
 2.MyAppBack 下 node http.js
 3.MyApp 下 react-native run-android
+
+
+
+1.所有球队
+    http://china.nba.com/static/data/league/conferenceteamlist.json
+2.球队logo
+    http://china.nba.com/media/img/teams/logos/WAS_logo.svg
+                                              {{abbr}}
+
+现役
+1.所有球员
+    http://china.nba.com/static/data/league/playerlist.json
+2.球员查询条件
+    http://china.nba.com/static/data/league/playerstatsform.json
+3.球员logo
+     http://china.nba.com/media/img/players/head/260x190/203518.png
+                                                          {{playerId}}
+退役
+1.根据条件获取球员
+   http://china.nba.com/static/data/league/historicalplayerlist_B_2010-2013.json
+                                                                {{姓名}} {{退役时间段}}
+2.查询条件 时间
+    http://china.nba.com/static/data/league/historicalplayerlistform.json

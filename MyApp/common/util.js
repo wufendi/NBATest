@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Dimensions, ActivityIndicator} from 'react-native';
 const Util = {
-    getRequest: (url,successCallback, failCallback) => {
-        fetch(url)
+    getRequest: (url, queryObject, successCallback, failCallback) => {
+        fetch(url, queryObject)
             .then((res)=>res.json())
             .then((data) => successCallback(data))
             .catch((err) => failCallback(err))

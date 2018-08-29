@@ -78,7 +78,7 @@ export default class Agent extends Component {
                                         <View style={[style.item]} key={index}>
                                             <View style={[{width: '25%'},style.centerContainer]}><Text>{getContentTime(item.profile.utcMillis)}</Text></View>
                                             <View style={[{width: '8%'},style.centerContainer]}><Text>{item.isHome === 'true' ? '主' : '客'}</Text></View>
-                                            <View style={[{width: '15%'},style.centerContainer]}><Text style={{color: '#0064bb'}} onPress={() => {this.props.teamDetail(item.isHome === 'true' ? item.awayTeam.profile : item.homeTeam.profile)}}>{item.isHome === 'true' ? item.awayTeam.profile.name : item.homeTeam.profile.name}</Text></View>
+                                            <View style={[{width: '15%'},style.centerContainer]}><Text style={{color: '#0064bb'}}>{item.isHome === 'true' ? item.awayTeam.profile.name : item.homeTeam.profile.name}</Text></View>
                                             <View style={[{width: '15%'},style.centerContainer]}><Text>{item.boxscore.homeScore}-{item.boxscore.awayScore}{item.winOrLoss}</Text></View>
                                             <View style={[{width: '37%'},style.centerContainer]}><Text>{item.profile.arenaName}</Text></View>
                                         </View>

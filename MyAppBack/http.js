@@ -2,7 +2,8 @@ const getNbaTeamData = require('./getNbaTeamData');
 const getTeamRankData = require('./getTeamRankData');
 const getLogoSvg = require('./getLogoSvg');
 const getTeamDetailData = require('./getTeamDetailData');
-const getPlayerDetailData = require('./getPlayerDetailData');
+const {getPlayerDetailData, getPlayersListData} = require('./getPlayerDetailData');
+const getAllCountryData = require('./getAllCountry');
 const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
@@ -11,11 +12,13 @@ const server = http.createServer((req,res) => {
     const pathname = urlObject.pathname;
     console.log(urlObject);
     if (pathname === '/getNbaTeamData') {
-        getNbaTeamData((data)=>{
+        getNbaTeamData({name:1},(data)=>{
             data = JSON.stringify(data);
             res.writeHead(200, {
-                'Content-Type': 'text/plain;charset=utf-8',
-                'Transfer-Encoding': 'chunked'
+                'Content-Type': 'text/json;charset=utf-8',
+                'Transfer-Encoding': 'chunked',
+                'Access-Control-Allow-Origin': 'http://10.188.0.119:8081',
+                'Access-Control-Allow-Credentials': true
             });
             res.write(data);
             res.end();
@@ -36,7 +39,7 @@ const server = http.createServer((req,res) => {
             res.writeHead(200, {
                 'Content-Type': 'text/plain;charset=utf-8',
                 'Transfer-Encoding': 'chunked',
-                'Access-Control-Allow-Origin': 'http://192.168.1.226:8081',
+                'Access-Control-Allow-Origin': 'http://10.188.0.119:8081',
                 'Access-Control-Allow-Credentials': true
             });
             res.write(data);
@@ -49,7 +52,7 @@ const server = http.createServer((req,res) => {
             res.writeHead(200, {
                 'Content-Type': 'text/json;charset=utf-8',
                 'Transfer-Encoding': 'chunked',
-                'Access-Control-Allow-Origin': 'http://192.168.1.226:8081',
+                'Access-Control-Allow-Origin': 'http://10.188.0.119:8081',
                 'Access-Control-Allow-Credentials': true
             });
             res.write(data);
@@ -66,7 +69,7 @@ const server = http.createServer((req,res) => {
         });
         req.on('end',  () => {
             reqData = decodeURIComponent(reqData);
-            reqObject = querystring.parse(reqData);
+            reqObject = JSON.parse(reqData);
             Object.keys(reqObject).forEach((v, i) => { // 优化 查询参数目前只能少些 不能多写
                 if (reqObject[v]) {
                     if (v === 'searchName') {
@@ -84,20 +87,43 @@ const server = http.createServer((req,res) => {
             if (Object.keys(queryObject).length === 0) {
                 queryObject = {firstNameEn: /A/};
             }
-            console.log(pageObject);
-            getPlayerDetailData(queryObject, pageObject, resultObject, (data) => {
+            getPlayersListData(queryObject, pageObject, resultObject, (data) => {
                 data = JSON.stringify(data);
                 res.writeHead(200, {
                     'Content-Type': 'text/json;charset=utf-8',
                     'Transfer-Encoding': 'chunked',
-                    'Access-Control-Allow-Origin': 'http://192.168.1.226:8081',
+                    'Access-Control-Allow-Origin': 'http://10.188.0.119:8081',
                     'Access-Control-Allow-Credentials': true
                 });
                 res.write(data);
                 res.end();
             })
         });
-
+    }else if(pathname === '/getPlayerDetailData') {
+        const name = urlObject.query.name;
+        getPlayerDetailData({name}, {_id: 0, playerProfile: 1, stats: 1, teamProfile: 1}, (data) => {
+            data = JSON.stringify(data);
+            res.writeHead(200, {
+                'Content-Type': 'text/json;charset=utf-8',
+                'Transfer-Encoding': 'chunked',
+                'Access-Control-Allow-Origin': 'http://10.188.0.119:8081',
+                'Access-Control-Allow-Credentials': true
+            });
+            res.write(data);
+            res.end();
+        });
+    } else if(pathname === '/getAllCountryData') {
+        getAllCountryData((data) => {
+            data = JSON.stringify(data);
+            res.writeHead(200, {
+                'Content-Type': 'text/json;charset=utf-8',
+                'Transfer-Encoding': 'chunked',
+                'Access-Control-Allow-Origin': 'http://10.188.0.119:8081',
+                'Access-Control-Allow-Credentials': true
+            });
+            res.write(data);
+            res.end();
+        })
     }
 });
 server.listen(8104);
