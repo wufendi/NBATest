@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, ScrollView, ListView, View, Text,} from 'react-native';
+import {StyleSheet, ScrollView, ListView, TouchableOpacity, View, Text,} from 'react-native';
 import Util from '../../common/util';
 const styles = StyleSheet.create({
     // Container
@@ -80,6 +80,9 @@ export default class Career extends Component {
             }
         }
     }
+    teamDetail (data) {
+        this.props.navigation.navigate('TeamDetail', { name: data })
+    }
     renderTitle = (type) => {
         const titleData = this.state.titleTextData[type];
         return (
@@ -96,7 +99,7 @@ export default class Career extends Component {
             </View>
         )
     }
-    renderRow = (type, data, rowId, index) => {
+    renderRow = (currentKey, type, data, rowId, index) => {
         const keys = this.state.titleKeyData[type];
         const _type = type === 'average' ? 'statAverage' : 'statTotal';
         const _data = Object.assign(
@@ -111,6 +114,14 @@ export default class Career extends Component {
         return (
             <View style={ [styles.playerBox] } key={index}>
                 {keys.map((item, i) => {
+                    if (item === 'teamName' && currentKey !== 'allStarStatType') {
+                        return (
+                            <TouchableOpacity style={styles.p1} key={i} onPress={()=> this.teamDetail(data.profile.code)}>
+                                <View style={{flexDirection: 'column', flex: 1}}>
+                                    <Text style={[styles.dataBox, {color: '#0064bb'}]}>{_data[item]}</Text>
+                                </View>
+                            </TouchableOpacity>)
+                    }
                     return (
                         <View style={styles.p1} key={i}>
                             <View style={{flexDirection: 'column', flex: 1}}>
@@ -194,7 +205,7 @@ export default class Career extends Component {
                                         {this.renderTitle(item.type)}
                                         <ListView
                                             dataSource={item.data}
-                                            renderRow={(data) => this.renderRow(item.type,data)}
+                                            renderRow={(data) => this.renderRow(item.currentKey, item.type, data)}
                                             style={styles.listView} />
                                     </View>
                                 </ScrollView>)}

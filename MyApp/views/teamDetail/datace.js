@@ -22,17 +22,6 @@ const style = StyleSheet.create({
         width: 56,
         height: 56
     },
-    firstRank: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: '#fff',
-        backgroundColor: mainColor,
-        padding: 5,
-    },
-    rank: {
-        padding: 5,
-        color: mainColor
-    },
     item:{
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -49,10 +38,6 @@ const style = StyleSheet.create({
         padding: 3,
         color: '#fff',
         fontSize: 12
-    },
-    tabTextActive: {
-        borderRadius: 3,
-        backgroundColor: mainColor
     }
 });
 export default class Datace extends Component {
@@ -111,10 +96,21 @@ export default class Datace extends Component {
             }
         }
         this.renderRow = (data, rowId, index) => {
+            const firstRank = {
+                fontSize: 14,
+                    fontWeight: 'bold',
+                    color: '#fff',
+                    backgroundColor: this.props.themeColor,
+                    padding: 5,
+            };
+            const rank = {
+                padding: 5,
+                color: this.props.themeColor
+            };
             return (
-                <TouchableOpacity style={[style.item, {flex: 10}]} key={rowId}>
+                <TouchableOpacity style={[style.item, {flex: 10}]} key={rowId} onPress={()=> this.playerDetail(data.profile.code)}>
                     <View style={[style.centerContainer, style.flex1]}>
-                        <Text style={data.rank === '1' ? style.firstRank : style.rank}> {data.rank}</Text>
+                        <Text style={data.rank === '1' ? firstRank : rank}> {data.rank}</Text>
                     </View>
                     <View  style={[style.centerContainer,style.flex3]}>
                         <Image style={style.image} source={{uri: `http://china.nba.com/media/img/players/silos/220x350/${data.profile.playerId}.png`}}/>
@@ -134,6 +130,9 @@ export default class Datace extends Component {
         if (key !== this.state.currentTab) {
             this.setState({currentTab: key});
         }
+    }
+    playerDetail (data) {
+        this.props.navigation.navigate('PlayerDetail', { name: data })
     }
     componentWillReceiveProps(nextProps) {
         const tabsContentData = {
@@ -156,20 +155,24 @@ export default class Datace extends Component {
     render() {
         const {currentTab, tabsContentData, loadingShow, tabs} = this.state;
         const dataSource =  new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        const themeColor = this.props.themeColor;
+        const tabTextActive = {
+            borderRadius: 3,
+            backgroundColor: themeColor
+        }
         let currentTabData = dataSource.cloneWithRows([]);
         let seasonType = '常规赛';
-        console.log(this.state)
         if (!loadingShow) {
             currentTabData = dataSource.cloneWithRows(tabsContentData[currentTab].players);
             seasonType = tabsContentData[currentTab].seasonType === '2' ? '常规赛' : '季后赛';
         }
         return (
             <View style={{flex:1,paddingBottom:20,backgroundColor:'#fff'}}>
-                <View style={{ backgroundColor: mainColor, padding: 10}}>
+                <View style={{ backgroundColor: themeColor, padding: 10}}>
                     <Text style={{color: '#fff'}}>{seasonType}数据王</Text>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-around',  backgroundColor: '#032f4f',padding: 2}}>
-                    {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? style.tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
+                <View style={{flexDirection: 'row', justifyContent: 'space-around',  backgroundColor: `${themeColor}dd`,padding: 2}}>
+                    {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
                 </View>
                 <View>
                 {loadingShow ? Util.loading: (

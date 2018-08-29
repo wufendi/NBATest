@@ -76,7 +76,7 @@ export default class Data extends Component {
         const totalData = ['年度', '场数','命中','出手', '三分命中', '三分出手','罚球命中', '罚球出手', '进攻', '防守', '篮板', '助攻', '抢断', '盖帽', '失误', '犯规', '得分'];
         const titleData = type === 'total' ? totalData : averageData;
         return (
-            <View style={[styles.titleBox,{backgroundColor: '#032f4f'}]}>
+            <View style={[styles.titleBox,{backgroundColor: `${this.props.themeColor}dd`}]}>
                 {
                     titleData.map((item, index) => (
                         <View style={styles.p1} key={index}>
@@ -109,8 +109,6 @@ export default class Data extends Component {
                     })}
                     </View>
         )
-
-
     }
     changeType = (type,seasonType) => {
         if (this.state[type] !== seasonType) {
@@ -128,7 +126,8 @@ export default class Data extends Component {
     render() {
         const horizontal = true;
         const originData = this.props.data || [];
-        const activeClass = {backgroundColor: '#0f6db4'};
+        const themeColor = this.props.themeColor;
+        const activeClass = {backgroundColor: themeColor};
         const seasonType2DataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         const seasonType4DataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         let seasonType2Data = []; // 常规赛/平均
@@ -148,11 +147,11 @@ export default class Data extends Component {
         seasonType4Data = seasonType4DataSource.cloneWithRows(seasonType4Data);
         return (
             <View style={{flex: 1,backgroundColor: '#fff'}}>
-                <View style={{flexDirection: 'row',justifyContent:'space-between',backgroundColor:'#0f6db4',padding: 5}}>
+                <View style={{flexDirection: 'row',justifyContent:'space-between',backgroundColor:themeColor,padding: 5}}>
                     <View>
                         <Text style={{color: '#fff',padding:5}}>常规赛数据</Text>
                     </View>
-                    <View style={{backgroundColor:'#032f4f',flexDirection: 'row',alignItems: 'center',padding:2,borderRadius: 3}}>
+                    <View style={{backgroundColor:`rgba(255, 255, 255, 0.15)`,flexDirection: 'row',alignItems: 'center',padding:2,borderRadius: 3}}>
                         <View style={[this.state.season2Type === 'average' ? activeClass: '',{padding: 3,borderRadius: 3}]}>
                             <Text style={{color: '#fff'}}  onPress={()=> {this.changeType('season2Type','average')}}>平均</Text>
                         </View>
@@ -175,11 +174,11 @@ export default class Data extends Component {
                         </View>
                     </ScrollView>)}
                 </View>
-                <View style={{flexDirection: 'row',justifyContent:'space-between',backgroundColor:'#0f6db4',padding: 5}}>
+                <View style={{flexDirection: 'row',justifyContent:'space-between',backgroundColor:themeColor,padding: 5}}>
                     <View>
                         <Text style={{color: '#fff',padding:5}}>季后赛数据</Text>
                     </View>
-                    <View style={{backgroundColor:'#032f4f',flexDirection: 'row',alignItems: 'center',padding:2,borderRadius: 3}}>
+                    <View style={{backgroundColor:`rgba(255, 255, 255, 0.15)`,flexDirection: 'row',alignItems: 'center',padding:2,borderRadius: 3}}>
                         <View style={[this.state.season4Type === 'average' ? activeClass: '',{padding: 3,borderRadius: 3}]}>
                             <Text style={{color: '#fff'}}  onPress={()=> {this.changeType('season4Type','average')}}>平均</Text>
                         </View>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, ScrollView, ListView, View, Text, Image} from 'react-native';
+import {StyleSheet, ScrollView, TouchableOpacity, ListView, View, Text, Image} from 'react-native';
 import Util from '../../common/util';
 const styles = StyleSheet.create({
     // Container
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
         borderRadius: 15,
-        borderColor: '#dadada',
         borderWidth: 1
     }
 });
@@ -101,12 +100,15 @@ export default class Player extends Component {
             currentTab: 'info'
         };
     }
+    playerDetail (data) {
+        this.props.navigation.navigate('PlayerDetail', { name: data })
+    }
     renderTitle = (type) => {
         const infoTitle = ['姓名', '位置', '身高', '体重', '球号', '生日', '经验','进入NBA之前', '国籍'];
         const dataTitle = ['姓名', '场数', '先发', '分钟', '%', '三分%', '罚球%', '进攻', '防守', '场均篮板', '场均助攻', '场均抢断', '场均盖帽', '失误', '犯规', '场均得分'];
         const currentTitle = type === 'info' ? infoTitle : dataTitle;
         return (
-            <View style={[styles.titleBox,{backgroundColor: '#032f4f'}]}>
+            <View style={[styles.titleBox,{backgroundColor: `${this.props.themeColor}dd`}]}>
                 {
                     currentTitle.map((item, index) => {
                         let currentStyle = type === 'info' ? styles.p2 : styles.p1;
@@ -133,15 +135,15 @@ export default class Player extends Component {
         const keys = type === 'info' ? infoKey : dataKey;
         return (
             <View style={ [styles.playerBox] } key={index}>
-                <View style={[type === 'info' ? styles.p3 : styles.p2,{marginLeft: 5}]}>
+                <TouchableOpacity style={[type === 'info' ? styles.p3 : styles.p2,{marginLeft: 5}]} onPress={()=> this.playerDetail(data.profile.code)}>
                     <View style={{flexDirection: 'column'}}>
-                        <Image style={styles.img} source={{uri: `http://china.nba.com/media/img/players/head/260x190/${data.profile.playerId}.png`}}/>
+                        <Image style={[styles.img,{ borderColor: this.props.themeColor}]} source={{uri: `http://china.nba.com/media/img/players/head/260x190/${data.profile.playerId}.png`}}/>
                     </View>
                     <View style={{flexDirection: 'column',marginLeft: 5}}>
                         <Text style={[styles.dataBox,{alignSelf: 'flex-start', color: '#0064bb'}]}>{data.profile.firstName}</Text>
                         <Text style={[styles.dataBox,{alignSelf: 'flex-start', color: '#0064bb'}]}>{data.profile.lastName}</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
                 {keys.map((item, i) => {
                     let currentStyle = styles.p2;
                     if (type === 'info' && item === 'displayAffiliation') {
@@ -163,16 +165,17 @@ export default class Player extends Component {
         const {currentTab, loadingShow} = this.state;
         const horizontal = true;
         const originData = this.props.data || [];
-        const activeClass = {backgroundColor: '#0f6db4'};
+        const themeColor = this.props.themeColor;
+        const activeClass = {backgroundColor: themeColor};
         let dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         dataSource = dataSource.cloneWithRows(originData);
         return (
             <View style={{flex: 1,backgroundColor: '#fff'}}>
-                <View style={{flexDirection: 'row',justifyContent:'space-between',backgroundColor:'#0f6db4',padding: 5}}>
+                <View style={{flexDirection: 'row',justifyContent:'space-between',backgroundColor:themeColor,padding: 5}}>
                     <View>
                         <Text style={{color: '#fff',padding:5}}>季前赛阵容</Text>
                     </View>
-                    <View style={{backgroundColor:'#032f4f',flexDirection: 'row',alignItems: 'center',padding:2,borderRadius: 3}}>
+                    <View style={{backgroundColor:`rgba(255, 255, 255, 0.15)`,flexDirection: 'row',alignItems: 'center',padding:2,borderRadius: 3}}>
                         <View style={[currentTab === 'info' ? activeClass: '',{padding: 3,borderRadius: 3}]}>
                             <Text style={{color: '#fff'}}  onPress={()=> {this.setState({currentTab: 'info'})}}>信息</Text>
                         </View>

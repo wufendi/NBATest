@@ -74,9 +74,8 @@ const style = StyleSheet.create({
 export default class PlayerDetail extends Component {
     constructor(props){
         super(props)
-        const playerName = props.navigation.state.params.name.toLowerCase()
         this.state = {
-            name: playerName,//'lebron_james',//playerName,
+            name: props.navigation.state.params.name.toLowerCase(),//'lebron_james',//playerName,
             themeColor: mainColor,
             loadingShow: true,
             currentTab: 'career',
@@ -150,9 +149,16 @@ export default class PlayerDetail extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
+        const name = nextProps.navigation.state.params.name.toLowerCase();
+        if (name !== this.state.name) {
+            this.setState({
+                name
+            })
+            this.getData(name);
+        }
     }
     componentDidMount() {
-        this.getData();
+        this.getData(this.state.name);
     }
     render() {
         const {currentTab, tabs, themeColor, tabComponent, info, tabsContentData} = this.state;

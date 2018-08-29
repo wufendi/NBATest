@@ -62,17 +62,12 @@ const style = StyleSheet.create({
     },
     tabText: {
         padding: 10,
-    },
-    tabTextActive: {
-       borderBottomWidth: 3,
-       borderBottomColor: mainColor,
-       color: mainColor
     }
 });
 export default class TeamDetail extends Component {
     constructor(props){
         super(props)
-        const teamName = props.navigation.state.params.name.toLowerCase()
+        const teamName = props.navigation.state.params.name.toLowerCase();
         this.state = {
             name: teamName,
             themeColor: Util.getTeamRelate(teamName).color,
@@ -122,11 +117,11 @@ export default class TeamDetail extends Component {
             this.setState({currentTab: key});
         }
     }
-    getData() {
+    getData(teamName) {
         this.setState({
             loadingShow: true
         });
-        Util.getRequest(api.getTeamDetailData+`?team=${this.state.name}`,{},(data)=>{
+        Util.getRequest(api.getTeamDetailData+`?team=${teamName}`,{},(data)=>{
             if (data) {
                 this.setState({
                     loadingShow: false,
@@ -146,14 +141,28 @@ export default class TeamDetail extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params.name.toLowerCase() !== this.state.name) {
+            const teamName = nextProps.navigation.state.params.name.toLowerCase();
+            this.setState({
+                name: teamName,
+                themeColor: Util.getTeamRelate(teamName).color,
+                stadium: Util.getTeamRelate(teamName).stadium,
+            });
+            this.getData(teamName);
+        }
     }
     componentDidMount() {
-        this.getData();
+        this.getData(this.state.name);
     }
     render() {
         const {currentTab, tabs, themeColor, tabComponent, info, tabsContentData, stadium} = this.state;
         const CurrentTabContent = tabComponent[currentTab]
         const currentData = tabsContentData[currentTab]
+        const tabTextActive = {
+            borderBottomWidth: 3,
+                borderBottomColor: themeColor,
+                color: themeColor
+        }
         return (
             <View style={{ flex: 1 }}>
                 {
@@ -178,10 +187,10 @@ export default class TeamDetail extends Component {
                                 </View>
                             </View>
                             <View style={{flexDirection: 'row', justifyContent: 'space-around',  backgroundColor: '#fff'}}>
-                                {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? style.tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
+                                {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
                             </View>
                             <View style={{flex: 1}}>
-                                <CurrentTabContent navigation={this.props.navigation} data={currentData} />
+                                <CurrentTabContent navigation={this.props.navigation} data={currentData} themeColor = {themeColor}/>
                             </View>
                         </View>
                     )

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, ScrollView, SectionList, View, Text,} from 'react-native';
+import {StyleSheet, ScrollView, SectionList, View, Text, TouchableOpacity} from 'react-native';
 import Util from '../../common/util';
 const mainColor = '#006bb7';
 const style = StyleSheet.create({
@@ -10,14 +10,12 @@ const style = StyleSheet.create({
         color: '#fff'
     },
     top: {
-        backgroundColor: '#032f4f',
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         padding: 10
     },
     sectionTop: {
-        backgroundColor: '#356da0',
         padding: 10
     },
     item:{
@@ -52,6 +50,10 @@ export default class Agent extends Component {
     constructor(props) {
         super(props);
     }
+    teamDetail (data) {
+        const name = data.isHome === 'true' ? data.awayTeam.profile.code : data.homeTeam.profile.code;
+        this.props.navigation.navigate('TeamDetail', { name: name });
+    }
     render() {
         const originData = this.props.data || [];
         let sectionData = [];
@@ -62,7 +64,7 @@ export default class Agent extends Component {
         }
         return (
             <View style={{flex:1,paddingBottom:20,backgroundColor:'#fff'}}>
-                <View style={[style.top]}>
+                <View style={[style.top, {backgroundColor: `${this.props.themeColor}`}]}>
                     <View style={[{width: '25%'},style.centerContainer]}><Text style={style.fontWhite}>时间</Text></View>
                     <View style={[{width: '8%'},style.centerContainer]}><Text style={style.fontWhite}>主客</Text></View>
                     <View style={[{width: '15%'},style.centerContainer]}><Text style={style.fontWhite}>对手</Text></View>
@@ -78,14 +80,14 @@ export default class Agent extends Component {
                                         <View style={[style.item]} key={index}>
                                             <View style={[{width: '25%'},style.centerContainer]}><Text>{getContentTime(item.profile.utcMillis)}</Text></View>
                                             <View style={[{width: '8%'},style.centerContainer]}><Text>{item.isHome === 'true' ? '主' : '客'}</Text></View>
-                                            <View style={[{width: '15%'},style.centerContainer]}><Text style={{color: '#0064bb'}}>{item.isHome === 'true' ? item.awayTeam.profile.name : item.homeTeam.profile.name}</Text></View>
+                                            <TouchableOpacity style={[{width: '15%'},style.centerContainer]} onPress={()=> this.teamDetail(item)}><Text style={{color: '#0064bb'}}>{item.isHome === 'true' ? item.awayTeam.profile.name : item.homeTeam.profile.name}</Text></TouchableOpacity>
                                             <View style={[{width: '15%'},style.centerContainer]}><Text>{item.boxscore.homeScore}-{item.boxscore.awayScore}{item.winOrLoss}</Text></View>
                                             <View style={[{width: '37%'},style.centerContainer]}><Text>{item.profile.arenaName}</Text></View>
                                         </View>
                                     )
                                 }}
                                 renderSectionHeader = {({section: {title}}) => {
-                                    return ( <View style={[style.sectionTop]}><Text style={style.fontWhite}>{title}</Text></View>)
+                                    return ( <View style={[style.sectionTop, {backgroundColor: `${this.props.themeColor}dd`}]}><Text style={style.fontWhite}>{title}</Text></View>)
                                 }}
                                 sections = {sectionData}
                                 keyExtractor={(item, index) => index}
