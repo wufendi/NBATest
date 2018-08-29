@@ -23,30 +23,36 @@ const style = StyleSheet.create({
     fontWhite: {
         color: '#fff'
     },
-    marginBottom10: {
-        marginBottom: 10
+    marginBottom5: {
+        marginBottom: 5
     },
     marginRight10: {
         marginRight: 10
     },
     top: {
-        padding: 10
+        padding: 8
     },
     topContent: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
     },
+    topImgView: {
+        alignSelf: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 60,
+        height: 60,
+        width: 60,
+        marginBottom: 5
+    },
     topImg: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        borderWidth: 1,
-        backgroundColor: 'white'
+        width: 60,
+        height: 60,
+        borderRadius: 60
     },
     item:{
         flexDirection: 'row',
-        height: 40,
+        height: 36,
         padding: 5
     },
     centerContainer: {
@@ -62,12 +68,7 @@ const style = StyleSheet.create({
         padding: 5,
     },
     tabText: {
-        padding: 10,
-    },
-    tabTextActive: {
-        borderBottomWidth: 3,
-        borderBottomColor: mainColor,
-        color: mainColor
+        padding: 8,
     }
 });
 export default class PlayerDetail extends Component {
@@ -75,7 +76,7 @@ export default class PlayerDetail extends Component {
         super(props)
         const playerName = props.navigation.state.params.name.toLowerCase()
         this.state = {
-            name: playerName,
+            name: playerName,//'lebron_james',//playerName,
             themeColor: mainColor,
             loadingShow: true,
             currentTab: 'career',
@@ -126,13 +127,14 @@ export default class PlayerDetail extends Component {
                 this.setState({
                     loadingShow: false,
                     tabsContentData: {
-                        career: data.stats.regularSeasonStat.playerTeams,
+                        career: data.stats,
                         splits: data.stats.playerSplit.splits,
                         seasonGames: data.stats.seasonGames,
                         contrast: data.stats
                     },
                     themeColor: Util.getTeamRelate(data.teamProfile.code).color,
                     info: {
+                        displayNameEn: data.playerProfile.displayNameEn,
                         displayName: data.playerProfile.displayName,
                         playerId: data.playerProfile.playerId,
                         jerseyNo: data.playerProfile.jerseyNo,
@@ -156,39 +158,44 @@ export default class PlayerDetail extends Component {
         const {currentTab, tabs, themeColor, tabComponent, info, tabsContentData} = this.state;
         const CurrentTabContent = tabComponent[currentTab]
         const currentData = tabsContentData[currentTab]
+        const tabTextActive = {
+            borderBottomWidth: 3,
+            borderBottomColor: themeColor,
+            color: themeColor
+        };
         return (
             <View style={{ flex: 1 }}>
                 {
                     this.state.loadingShow ? Util.loading : (
                         <View style={{ flex: 1 }}>
                             <View style={[style.top,{ backgroundColor: themeColor}]}>
-                                <View style={[style.marginBottom10]}>
-                                    <View style={{textAlign: 'center'}}>
+                                <View style={[style.marginBottom5]}>
+                                    <View style={style.topImgView}>
                                         <Image  style={style.topImg} source={{uri: `http://china.nba.com/media/img/players/head/260x190/${info.playerId}.png`}}/>
                                     </View>
-                                    <Text style={[style.textCenter, style.fontSmall, style.fontWhite]}>{info.displayName}</Text>
-                                    <Text style={[style.textCenter, style.fontSmall, style.fontWhite]}>{info.jerseyNo}</Text>
+                                    <Text style={[style.textCenter, style.fontWhite, style.marginBottom5]}>{info.displayName} ({info.displayNameEn})</Text>
+                                    <Text style={[style.textCenter, style.fontWhite]}>{info.jerseyNo}</Text>
                                 </View>
                                 <View style={style.topContent}>
                                     <View style={style.centerContainer}>
                                         <Text style={[ style.fontSmall, style.fontWhite]}>场均得分</Text>
                                         <Text style={[ style.fontSmall, style.fontWhite]}>{info.pointsPg}</Text>
                                     </View>
-                                    <View>
+                                    <View style={[style.centerContainer,{marginRight: 10,marginLeft:10}]}>
                                         <Text style={[ style.fontSmall, style.fontWhite]}>场均篮板</Text>
                                         <Text style={[ style.fontSmall, style.fontWhite]}>{info.rebsPg}</Text>
                                     </View>
-                                    <View>
+                                    <View style={style.centerContainer}>
                                         <Text style={[ style.fontSmall, style.fontWhite]}>场均助攻</Text>
                                         <Text style={[ style.fontSmall, style.fontWhite]}>{info.assistsPg}</Text>
                                     </View>
                                 </View>
                             </View>
                             <View style={{flexDirection: 'row', justifyContent: 'space-around',  backgroundColor: '#fff'}}>
-                                {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? style.tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
+                                {tabs.map((v, i)=> <Text style={[style.tabText,v.key === currentTab ? tabTextActive : '']} key={i} onPress={() => {this.changeTab(v.key)}}> {v.text} </Text>)}
                             </View>
                             <View style={{flex: 1}}>
-                                <CurrentTabContent navigation={this.props.navigation} data={currentData} />
+                                <CurrentTabContent navigation={this.props.navigation} data={currentData} themeColor={themeColor} />
                             </View>
                         </View>
                     )
