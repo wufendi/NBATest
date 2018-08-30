@@ -5,11 +5,11 @@ import Players from '.././players';
 const mainColor = '#006bb7';
 export default TabNav = createBottomTabNavigator(
     {
-        Players: {
-            screen: Players
-        },
         Home: {
             screen: Home,
+        },
+        Players: {
+            screen: Players
         },
     },
     {
