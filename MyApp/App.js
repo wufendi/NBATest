@@ -4,12 +4,13 @@ import TabNav from './views/common/tabNav';
 import TeamDetail from './views/teamDetail';
 import PlayerDetail from './views/playerDetail';
 
-export default App = StackNavigator({
+export default App = StackNavigator(
+    {
       TeamDetail: {
-          screen: TeamDetail
+          screen: TeamDetail,
       },
       PlayerDetail: {
-          screen: PlayerDetail
+          screen: PlayerDetail,
       },
       Main: {
         screen: TabNav,
@@ -17,6 +18,15 @@ export default App = StackNavigator({
               header: null
           })
       }
-    },{
-      initialRouteName: 'Main'
-})
+    },
+    {
+        initialRouteName: 'Main',
+        navigationOptions: {
+            headerStyle: {
+                height: 36,
+                backgroundColor: '#006bb7',
+            },
+            headerTintColor: '#fff',
+        },
+    }
+    )
