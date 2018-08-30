@@ -117,7 +117,7 @@ export default class Players extends Component {
             teamArray: [],
             playersArray: [],
             queryData: {
-                englishName: 'A',
+                englishName: '',
                 searchName: '',
                 page: 1,
                 limit: 20,
@@ -319,7 +319,7 @@ export default class Players extends Component {
                 </View>
                 <View style={styles.container}>
                     {
-                        loadingShow ? Util.loading : ( <ScrollView
+                        loadingShow ? Util.loading : playersArray.length > 0 ? ( <ScrollView
                             automaticallyAdjustContentInsets={false}
                             horizontal={horizontal}
                             style={styles.scrollView}>
@@ -330,7 +330,7 @@ export default class Players extends Component {
                                     renderRow={(data) => this.renderRow(data)}
                                     style={styles.listView} />
                             </View>
-                        </ScrollView>)
+                        </ScrollView>) : (<View style={{flex: 1}}><Text style={{textAlign: 'center',marginTop: 20}}>暂无符合条件的球员</Text></View>)
                     }
                     {
                         (hasMore && (!loadingShow)) ?  ( <View>
@@ -340,7 +340,6 @@ export default class Players extends Component {
                                      onPress={() => this.loadMore()}/>
                         </View>) : null
                     }
-
                 </View>
             </View>
         )

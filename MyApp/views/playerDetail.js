@@ -92,10 +92,10 @@ export default class PlayerDetail extends Component {
                     text: '比赛日志',
                     key: 'seasonGames'
                 },
-                {
-                    text: '对比',
-                    key: 'contrast'
-                },
+                // {
+                //     text: '对比',
+                //     key: 'contrast'
+                // },
             ],
             tabComponent: {
                 career: Career,
@@ -117,12 +117,13 @@ export default class PlayerDetail extends Component {
             this.setState({currentTab: key});
         }
     }
-    getData() {
+    getData(name) {
         this.setState({
             loadingShow: true
         });
-        Util.getRequest(api.getPlayerDetailData+`?name=${this.state.name}`,{},(data)=>{
+        Util.getRequest(api.getPlayerDetailData+`?name=${name}`,{},(data)=>{
             if (data) {
+                const currentSeasonTypePlayerTeamStats = data.stats.currentSeasonTypeStat.currentSeasonTypePlayerTeamStats[0] ? data.stats.currentSeasonTypeStat.currentSeasonTypePlayerTeamStats[0].statAverage : {assistsPg: '-', pointsPg: '-',rebsPg: '-'};
                 this.setState({
                     loadingShow: false,
                     tabsContentData: {
@@ -136,11 +137,16 @@ export default class PlayerDetail extends Component {
                         displayNameEn: data.playerProfile.displayNameEn,
                         displayName: data.playerProfile.displayName,
                         playerId: data.playerProfile.playerId,
-                        jerseyNo: data.playerProfile.jerseyNo,
-                        assistsPg:  data.stats.currentSeasonTypeStat.currentSeasonTypePlayerTeamStats[0].statAverage.assistsPg,
-                        pointsPg:  data.stats.currentSeasonTypeStat.currentSeasonTypePlayerTeamStats[0].statAverage.pointsPg,
-                        rebsPg:  data.stats.currentSeasonTypeStat.currentSeasonTypePlayerTeamStats[0].statAverage.rebsPg
+                        jerseyNo: data.playerProfile.jerseyNo || '-',
+                        assistsPg:  currentSeasonTypePlayerTeamStats.assistsPg,
+                        pointsPg:  currentSeasonTypePlayerTeamStats.pointsPg,
+                        rebsPg:  currentSeasonTypePlayerTeamStats.rebsPg
                     }
+                });
+            } else {
+                this.setState({
+                    loadingShow: false,
+                    info: null
                 });
             }
             console.log(data);
@@ -172,7 +178,7 @@ export default class PlayerDetail extends Component {
         return (
             <View style={{ flex: 1 }}>
                 {
-                    this.state.loadingShow ? Util.loading : (
+                    this.state.info ? this.state.loadingShow ? Util.loading : (
                         <View style={{ flex: 1 }}>
                             <View style={[style.top,{ backgroundColor: themeColor}]}>
                                 <View style={[style.marginBottom5]}>
@@ -204,7 +210,7 @@ export default class PlayerDetail extends Component {
                                 <CurrentTabContent navigation={this.props.navigation} data={currentData} themeColor={themeColor} />
                             </View>
                         </View>
-                    )
+                    ) : (<View style={{flex: 1}}><Text style={{textAlign: 'center',marginTop: 20}}>该球员可能退役了</Text></View>)
                 }
             </View>
         )

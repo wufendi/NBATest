@@ -134,6 +134,11 @@ export default class TeamDetail extends Component {
                     },
                     info: data.info
                 });
+            } else {
+                this.setState({
+                    loadingShow: false,
+                    info: null
+                });
             }
           console.log(data);
         },error => {
@@ -166,7 +171,7 @@ export default class TeamDetail extends Component {
         return (
             <View style={{ flex: 1 }}>
                 {
-                    this.state.loadingShow ? Util.loading : (
+                   this.state.info ? this.state.loadingShow ? Util.loading : (
                         <View style={{ flex: 1 }}>
                             <View style={[style.top,{ backgroundColor: themeColor}]}>
                                 <View style={style.marginBottom10}>
@@ -193,7 +198,7 @@ export default class TeamDetail extends Component {
                                 <CurrentTabContent navigation={this.props.navigation} data={currentData} themeColor = {themeColor}/>
                             </View>
                         </View>
-                    )
+                    ) : (<View style={{flex: 1}}><Text style={{textAlign: 'center',marginTop: 20}}>该球队不存在或者解散了</Text></View>)
                 }
             </View>
         )
